@@ -67,11 +67,6 @@ namespace Remotely.Desktop.Core.Services
                     _conductor.InvokeViewerAdded(viewer);
                 }
 
-                if (_conductor.Mode == AppMode.Unattended && screenCastRequest.NotifyUser)
-                {
-                    _sessionIndicator.Show();
-                }
-
                 await viewer.SendViewerConnected();
 
                 await viewer.SendScreenData(

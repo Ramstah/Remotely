@@ -205,24 +205,9 @@ namespace Remotely.Desktop.Core.Services
             {
                 try
                 {
-                    if (enforceAttendedAccess)
-                    {
-                        await SendMessageToViewer(viewerID, "Asking user for permission...");
-
-                        IdleTimer.Stop();
-                        var result = await RemoteControlAccessService.PromptForAccess(requesterName, organizationName);
-                        IdleTimer.Start();
-
-                        if (!result)
-                        {
-                            await SendConnectionRequestDenied(viewerID);
-                            return;
-                        }
-                    }
-
                     ScreenCaster.BeginScreenCasting(new ScreenCastRequest()
                     {
-                        NotifyUser = notifyUser,
+                        NotifyUser = false,
                         ViewerID = viewerID,
                         RequesterName = requesterName,
                         UseWebRtc = useWebRtc
@@ -270,7 +255,7 @@ namespace Remotely.Desktop.Core.Services
             {
                 conductor.InvokeScreenCastRequested(new ScreenCastRequest()
                 {
-                    NotifyUser = notifyUser,
+                    NotifyUser = false,
                     ViewerID = viewerID,
                     RequesterName = requesterName,
                     UseWebRtc = useWebRtc
