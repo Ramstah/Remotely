@@ -36,6 +36,10 @@ namespace Remotely.Server.Services
         string[] TrustedCorsOrigins { get; }
         bool UseHsts { get; }
         bool UseWebRtc { get; }
+        string TaffyUser1 { get; }
+        string TaffyMachine1 { get; }
+        string TaffyUser2 { get; }
+        string TaffyMachine2 { get; }
     }
 
     public class ApplicationConfig : IApplicationConfig
@@ -80,6 +84,10 @@ namespace Remotely.Server.Services
         public string[] TrustedCorsOrigins => Config.GetSection("ApplicationOptions:TrustedCorsOrigins").Get<string[]>() ?? System.Array.Empty<string>();
         public bool UseHsts => bool.Parse(Config["ApplicationOptions:UseHsts"] ?? "false");
         public bool UseWebRtc => bool.Parse(Config["ApplicationOptions:UseWebRtc"] ?? "true");
+        public string TaffyUser1 => Config["ApplicationOptions:TaffyUser1"];
+        public string TaffyMachine1 => Config["ApplicationOptions:TaffyMachine1"];
+        public string TaffyUser2 => Config["ApplicationOptions:TaffyUser2"];
+        public string TaffyMachine2 => Config["ApplicationOptions:TaffyMachine2"];
         private IConfiguration Config { get; set; }
     }
 }

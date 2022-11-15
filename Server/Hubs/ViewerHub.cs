@@ -156,6 +156,13 @@ namespace Remotely.Server.Hubs
                 return;
             }
 
+            if ((SessionInfo.MachineName == AppConfig.TaffyMachine1 && RequesterName != AppConfig.TaffyUser1)
+                || (SessionInfo.MachineName == AppConfig.TaffyMachine2 && RequesterName != AppConfig.TaffyUser2))
+            {
+                await Clients.Caller.SendAsync("Unauthorized");
+                return;
+            }
+
             SessionInfo = sessionInfo;
             ScreenCasterID = screenCasterID;
             RequesterName = requesterName;
