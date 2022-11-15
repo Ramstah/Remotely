@@ -156,17 +156,21 @@ namespace Remotely.Server.Hubs
                 return;
             }
 
-            if ((SessionInfo.MachineName == AppConfig.TaffyMachine1 && RequesterName != AppConfig.TaffyUser1)
-                || (SessionInfo.MachineName == AppConfig.TaffyMachine2 && RequesterName != AppConfig.TaffyUser2))
-            {
-                await Clients.Caller.SendAsync("Unauthorized");
-                return;
-            }
-
             SessionInfo = sessionInfo;
             ScreenCasterID = screenCasterID;
             RequesterName = requesterName;
             Mode = (RemoteControlMode)remoteControlMode;
+
+            if (SessionInfo != null && SessionInfo.MachineName != null)
+            {
+                if ((AppConfig.TaffyMachine1 != null && AppConfig.TaffyUser1 != null && SessionInfo.MachineName == AppConfig.TaffyMachine1 && RequesterName != AppConfig.TaffyUser1)
+                    || (AppConfig.TaffyMachine2 != null && AppConfig.TaffyUser2 != null && SessionInfo.MachineName == AppConfig.TaffyMachine2 && RequesterName != AppConfig.TaffyUser2))
+                {
+                    await Clients.Caller.SendAsync("Unauthorized");
+                    Context.Abort();
+                    return;
+                }
+            }
 
             string orgId = null;
 
@@ -192,6 +196,8 @@ namespace Remotely.Server.Hubs
                 SessionInfo.RequesterUserName = Context.User.Identity.Name;
                 SessionInfo.RequesterSocketID = Context.ConnectionId;
             }
+
+
 
             /*
             DataService.WriteEvent(new EventLog()
