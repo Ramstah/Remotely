@@ -196,7 +196,7 @@ namespace Remotely.Server.Hubs
                     return;
                 }
             }
-
+            /*
             DataService.WriteEvent(new EventLog()
             {
                 EventType = EventType.Info,
@@ -211,7 +211,7 @@ namespace Remotely.Server.Hubs
                                 $"Requester IP Address: " + Context?.GetHttpContext()?.Connection?.RemoteIpAddress?.ToString(),
                 OrganizationID = orgId
             });
-
+            */
 
             if (Mode == RemoteControlMode.Unattended)
             {
