@@ -161,17 +161,6 @@ namespace Remotely.Server.Hubs
             RequesterName = requesterName;
             Mode = (RemoteControlMode)remoteControlMode;
 
-            if (SessionInfo != null && SessionInfo.MachineName != null)
-            {
-                if ((AppConfig.TaffyMachine1 != null && AppConfig.TaffyUser1 != null && SessionInfo.MachineName == AppConfig.TaffyMachine1 && RequesterName != AppConfig.TaffyUser1)
-                    || (AppConfig.TaffyMachine2 != null && AppConfig.TaffyUser2 != null && SessionInfo.MachineName == AppConfig.TaffyMachine2 && RequesterName != AppConfig.TaffyUser2))
-                {
-                    await Clients.Caller.SendAsync("Unauthorized");
-                    Context.Abort();
-                    return;
-                }
-            }
-
             string orgId = null;
 
             if (Context?.User?.Identity?.IsAuthenticated == true)
@@ -197,9 +186,17 @@ namespace Remotely.Server.Hubs
                 SessionInfo.RequesterSocketID = Context.ConnectionId;
             }
 
+            if (SessionInfo != null && SessionInfo.MachineName != null)
+            {
+                if ((AppConfig.TaffyMachine1 != null && AppConfig.TaffyUser1 != null && SessionInfo.MachineName == AppConfig.TaffyMachine1 && RequesterName != AppConfig.TaffyUser1)
+                    || (AppConfig.TaffyMachine2 != null && AppConfig.TaffyUser2 != null && SessionInfo.MachineName == AppConfig.TaffyMachine2 && RequesterName != AppConfig.TaffyUser2))
+                {
+                    await Clients.Caller.SendAsync("Unauthorized");
+                    Context.Abort();
+                    return;
+                }
+            }
 
-
-            /*
             DataService.WriteEvent(new EventLog()
             {
                 EventType = EventType.Info,
@@ -214,7 +211,7 @@ namespace Remotely.Server.Hubs
                                 $"Requester IP Address: " + Context?.GetHttpContext()?.Connection?.RemoteIpAddress?.ToString(),
                 OrganizationID = orgId
             });
-            */
+
 
             if (Mode == RemoteControlMode.Unattended)
             {
