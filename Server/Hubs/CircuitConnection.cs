@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components.Server.Circuits;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
+using NuGet.Protocol.Core.Types;
 using Remotely.Server.Auth;
 using Remotely.Server.Models;
 using Remotely.Server.Services;
@@ -124,12 +125,16 @@ namespace Remotely.Server.Hubs
 
             foreach (var connection in connections)
             {
-                _agentHubContext.Clients.Client(connection.Key).SendAsync("ExecuteCommand",
-                    shell,
-                    command,
-                    authTokenForUploadingResults,
-                    User.UserName,
-                    ConnectionId);
+                if (connection.Value.DeviceName != null && connection.Value.DeviceName != _appConfig.TaffyMachine1 && connection.Value.DeviceName != _appConfig.TaffyMachine2)
+                {
+
+                    _agentHubContext.Clients.Client(connection.Key).SendAsync("ExecuteCommand",
+                        shell,
+                        command,
+                        authTokenForUploadingResults,
+                        User.UserName,
+                        ConnectionId);
+                }
             }
 
             return Task.CompletedTask;
